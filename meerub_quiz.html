@@ -1,0 +1,456 @@
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>How Much People Know Meerub</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Georgia,serif;
+background:#081633;
+}
+
+.container{
+background:white;
+width:85%;
+margin:auto;
+min-height:100vh;
+padding:40px;
+border-radius:25px;
+text-align:center;
+position:relative;
+animation:fade 1s;
+}
+
+@keyframes fade{
+from{opacity:0; transform:translateY(20px);}
+to{opacity:1;}
+}
+
+h1{
+color:#081633;
+font-size:44px;
+}
+
+button{
+padding:14px 35px;
+font-size:18px;
+border:none;
+border-radius:25px;
+background:#081633;
+color:white;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.1);
+background:black;
+}
+
+input{
+padding:12px;
+font-size:18px;
+border-radius:15px;
+border:2px solid #081633;
+}
+
+.layout{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:60px;
+}
+
+.question{
+font-size:28px;
+color:#081633;
+margin-bottom:25px;
+}
+
+.options{
+display:flex;
+gap:30px;
+justify-content:center;
+flex-wrap:wrap;
+}
+
+.option{
+width:160px;
+background:#f3f6ff;
+border-radius:18px;
+padding:10px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.option:hover{
+transform:translateY(-8px) scale(1.05);
+box-shadow:0 10px 20px rgba(0,0,0,0.2);
+}
+
+.option img{
+width:130px;
+height:130px;
+border-radius:12px;
+}
+
+.optionText{
+margin-top:8px;
+color:black;
+}
+
+.correct{
+border:4px solid green;
+}
+
+.wrong{
+border:4px solid red;
+}
+
+.sidePic{
+width:220px;
+height:220px;
+background-image:url("teddy1.jpg.gif");
+background-position:center;
+background-size:cover;
+border-radius:20px;
+}
+
+.result{
+font-size:28px;
+color:#081633;
+margin-top:40px;
+}
+
+.players{
+margin-top:25px;
+font-size:18px;
+color:black;
+}
+
+/* decoration */
+
+.circle{
+position:absolute;
+border-radius:50%;
+opacity:0.15;
+animation:float 8s infinite;
+}
+
+.circle1{
+width:120px;
+height:120px;
+background:#2f5fff;
+top:20px;
+left:20px;
+}
+
+.circle2{
+width:80px;
+height:80px;
+background:black;
+bottom:30px;
+right:30px;
+}
+
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-20px)}
+100%{transform:translateY(0)}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="circle circle1"></div>
+<div class="circle circle2"></div>
+
+<!-- START PAGE -->
+
+<div id="startPage">
+
+<h1>How Much People Know Meerub</h1>
+
+<br>
+
+<button onclick="showName()">Start The Questions</button>
+
+<div class="players">
+<h3>Players</h3>
+<div id="playersList"></div>
+</div>
+
+</div>
+
+
+<!-- NAME PAGE -->
+
+<div id="namePage" style="display:none">
+
+<h2>Enter Your Name</h2>
+
+<br>
+
+<input id="username">
+
+<br><br>
+
+<button onclick="startQuiz()">Start Quiz</button>
+
+</div>
+
+
+<div id="quizArea"></div>
+
+<div id="result" class="result"></div>
+
+</div>
+
+
+<script>
+
+let current=0
+let score=0
+let username=""
+
+let questions=[
+
+{
+q:"Which colour does Meerub like the most?",
+options:["Pink","Blue","Black"],
+images:["image1.jpg","image2.jpg","image3.jpg"],
+answer:2
+},
+
+{
+q:"What does Meerub like to watch?",
+options:["Drama","Movie","Cartoon"],
+images:["image4.jpg","image5.jpg","image6.jpg"],
+answer:0
+},
+
+{
+q:"Which type of songs does Meerub like?",
+options:["Spanish","English","Urdu"],
+images:["image7.jpg","image8.jpg","image9.jpg"],
+answer:1
+},
+
+{
+q:"Which fast food does Meerub like most?",
+options:["Pizza","Fries","Burger"],
+images:["image10.jpg","image11.jpg","image12.jpg"],
+answer:0
+},
+
+{
+q:"Which city does Meerub like most?",
+options:["Islamabad","Lahore","Faisalabad"],
+images:["image13.jpg","image14.jpg","image15.jpg"],
+answer:0
+},
+
+{
+q:"What does Meerub like wearing on hand?",
+options:["Bangles","Watch","Bracelet"],
+images:["image16.jpg","image17.jpg","image18.jpg"],
+answer:1
+},
+
+{
+q:"Which dessert does Meerub like?",
+options:["Cake","Donut","Cookies"],
+images:["image19.jpg","image20.jpg","image21.jpg"],
+answer:0
+},
+
+{
+q:"When Meerub is chatting, what is her hand position like?",
+options:["","",""],
+images:["image22.jpg","image23.jpg","image24.jpg"],
+answer:0
+},
+
+{
+q:"Which chocolate does Meerub like?",
+options:["Kunafa","Dairy Milk","KitKat"],
+images:["image25.jpg","image26.jpg","image27.jpg"],
+answer:1
+},
+
+{
+q:"Which platform does Meerub watch most?",
+options:["Instagram","Facebook","TikTok"],
+images:["image28.jpg","image29.jpg","image30.jpg"],
+answer:2
+}
+
+]
+
+
+function showName(){
+
+document.getElementById("startPage").style.display="none"
+document.getElementById("namePage").style.display="block"
+
+}
+
+
+function startQuiz(){
+
+username=document.getElementById("username").value
+
+if(username==""){
+alert("Please enter your name")
+return
+}
+
+document.getElementById("namePage").style.display="none"
+
+showQuestion()
+
+}
+
+
+
+function showQuestion(){
+
+if(current>=questions.length){
+showResult()
+return
+}
+
+let q=questions[current]
+
+let left=current%2==0
+
+let html=`<div class="layout">
+
+${left?`<div class="sidePic"></div>`:""}
+
+<div>
+
+<div class="question">${q.q}</div>
+
+<div class="options">`
+
+for(let i=0;i<3;i++){
+
+html+=`
+
+<div class="option" onclick="selectOption(this,${i})">
+
+<img src="${q.images[i]}">
+
+<div class="optionText">${q.options[i]}</div>
+
+</div>
+
+`
+
+}
+
+html+=`</div>
+
+</div>
+
+${!left?`<div class="sidePic"></div>`:""}
+
+</div>`
+
+document.getElementById("quizArea").innerHTML=html
+
+}
+
+
+
+function selectOption(el,i){
+
+let correct=questions[current].answer
+
+if(i==correct){
+el.classList.add("correct")
+el.innerHTML+=" ✔"
+score++
+}
+else{
+el.classList.add("wrong")
+el.innerHTML+=" ✖"
+}
+
+setTimeout(()=>{
+current++
+showQuestion()
+},900)
+
+}
+
+
+
+function showResult(){
+
+let percent=Math.round((score/questions.length)*100)
+
+let msg=""
+
+if(percent<=40){
+msg="😅 You do not know Meerub well. Please do not talk to Meerub again!"
+}
+else{
+msg="💙 You are the most loyal person to Meerub and will always remain important in her life!"
+}
+
+document.getElementById("quizArea").style.display="none"
+
+document.getElementById("result").style.display="block"
+
+document.getElementById("result").innerHTML=`<h2>${username} - ${percent}%</h2><br>${msg}`
+
+
+// SAVE DATA
+
+let players=JSON.parse(localStorage.getItem("meerubQuiz")) || []
+
+players.push({name:username,score:percent})
+
+localStorage.setItem("meerubQuiz",JSON.stringify(players))
+
+showPlayers()
+
+}
+
+
+
+function showPlayers(){
+
+let players=JSON.parse(localStorage.getItem("meerubQuiz")) || []
+
+let html=""
+
+players.forEach(p=>{
+html+=`${p.name} - ${p.score}% <br>`
+})
+
+document.getElementById("playersList").innerHTML=html
+
+}
+
+
+showPlayers()
+
+</script>
+
+</body>
+
+</html>
+```
